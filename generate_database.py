@@ -78,7 +78,7 @@ if __name__ == "main":
             course=date(randint(2010, 2023), randint(1, 28), randint(1, 12))
         )  
 
-#создавем факультет бд 
+#создаём факультет бд 
 def create_faculty(faculty_name, dean_name, faculty_capacity):
     endpoint = f"{BASE_URL}/add_faculty"
     payload = {
