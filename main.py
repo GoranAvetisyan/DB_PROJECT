@@ -63,3 +63,48 @@ async def delete_student(student_id_: int):
         session_.commit()
         
         return f"Student deleted: {obj.id} - {obj.Name_Surname}."
+
+
+@app.post("/add_study", tags=["study"])
+async def add_study(group_number_: int, scholarship_: int, speciality_: str,
+                      course_: date):
+    obj = models_.Study(group_number = group_number_, scholarship = scholarship_, 
+                        speciality = speciality_, course = course_)
+    session_.add(obj)
+    session_.commit()
+    return f"Study Added: {obj.student_id} - {obj.speciality}"
+
+@app.get("/get_study/{student_id}", tags=["study"])
+async def get_study(student_id: int):
+    study = session_.query(models_.Study).filter(models_.Study.student_id == student_id).first()
+    if study is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to get study by ID: Study not found.")
+    return study
+
+#CREATE STUDY TABLE(CRUD)
+
+@app.put("/update_study/{student_id}", tags=["study"])
+async def update_study(student_id_: int, new_group_number_: int, new_scholarship_: int, new_speciality_: str,
+                      new_course_: date):
+    if (obj := session_.query(models_.Study).filter(models_.Study.student_id == student_id_).first()) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to update study")
+    if new_group_number_:
+        obj.group_number = new_group_number_
+    if new_scholarship_:
+        obj.scholarship = new_scholarship_
+    if new_speciality_:
+        obj.speciality = new_speciality_
+    if new_course_:
+        obj.course = new_course_
+    session_.add(obj)
+    session_.commit()
+    return f"Successfully updated study for student with ID:{obj.id}."
+
+@app.delete("/delete_study/{student_id}", tags=["study"])
+async def delete_study(student_id_: int):
+    if (obj := session_.query(models_.Study).filter(models_.Study.student_id == student_id_).first()) is not None:
+        session_.delete(obj)
+        session_.commit()
+        return f"Study deleted: {obj.student_id}."
