@@ -149,3 +149,48 @@ async def delete_faculty(faculty_id_: int):
         session_.delete(obj)
         session_.commit()
         return f"Faculty deleted: {obj.faculty_id}."
+
+
+#requests
+    #SELECT
+    
+@app.get("/students", tags=["student"])
+async def get_students(name: str = None, entry_year: int = None):
+    query = session_.query(models_.Student)
+    if name:
+        query = query.filter(models_.Student.Name_Surname == name)
+    if entry_year:
+        query = query.filter(models_.Student.entry_year == entry_year)
+    students = query.all()
+    return students
+
+    #JOIN
+
+@app.get("/students_with_study", tags=["student"])
+async def get_students_with_study():
+    query = session_.query(models_.Student, models_.Study).join(models_.Study, models_.Student.id == models_.Study.student_id)
+    students_with_study = query.all()
+    return students_with_study
+
+    #UPDATE
+
+@app.put("/update_gpa/{student_id}", tags=["student"])
+async def update_gpa(student_id: int, new_gpa: float):
+    student = session_.query(models_.Student).filter(models_.Student.id == student_id).first()
+    if student:
+        student.gpa = new_gpa
+        session_.commit()
+        return f"Successfully updated GPA for student with ID: {student_id}"
+    else:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    #SORTING
+
+@app.get("/sorted_students", tags=["student"])
+async def sorted_students(sort_by: str = "Name_Surname"):
+    if sort_by not in ["Name_Surname", "gpa", "age", "entry_year", "gender"]:
+        raise HTTPException(status_code=400, detail="Invalid sort field")
+
+    query = session_.query(models_.Student).order_by(getattr(models_.Student, sort_by))
+    students = query.all()
+    return students
