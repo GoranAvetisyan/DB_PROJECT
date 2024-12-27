@@ -5,6 +5,8 @@ from datetime import date, timedelta
 
 BASE_URL = "http://127.0.0.1:8000"
 
+#добавляем раздел студент
+
 def create_student(student_name, student_gpa, student_age, enrollment_year, student_gender):
     endpoint = f"{BASE_URL}/add_student"
     payload = {
@@ -39,3 +41,39 @@ if __name__ == "__main__":
         )
 
 #написать продолжение через 30-40 минут 
+
+
+#добавляем раздел инфо про студента
+
+def add_study(group_number, scholarship, speciality, course):
+    url = f"{BASE_URL}/add_study"
+
+    params = {
+        "group_number_": group_number,
+        "scholarship_": scholarship if scholarship is not None else 0,
+        "speciality_": speciality,
+        "course_": course.isoformat()  # Convert date to string in ISO format
+    }
+
+    response = requests.post(url, params=params)
+    try:
+        json_response = response.json()
+        if response.status_code == 200:
+            print(f"Study Added")
+        else:
+            print(f"Failed to add study. Status code: {response.status_code}")
+            print(f"Response content: {json_response}")
+    except ValueError:
+        print(f"Failed to parse response as JSON. Status code: {response.status_code}")
+        print(f"Response content: {response.text}")
+
+if __name__ == "main":
+    fake = Faker()
+
+    for _ in range(10):
+        add_study(
+            group_number=randint(101, 999),
+            scholarship=randint(0, 1) * randint(100, 1000),
+            speciality=fake.job(),
+            course=date(randint(2010, 2023), randint(1, 28), randint(1, 12))
+        )  
