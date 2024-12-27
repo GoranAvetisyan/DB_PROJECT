@@ -77,3 +77,33 @@ if __name__ == "main":
             speciality=fake.job(),
             course=date(randint(2010, 2023), randint(1, 28), randint(1, 12))
         )  
+
+#создавем факультет бд 
+def create_faculty(faculty_name, dean_name, faculty_capacity):
+    endpoint = f"{BASE_URL}/add_faculty"
+    payload = {
+        "name_": faculty_name,
+        "decan_": dean_name,
+        "capacity_": faculty_capacity
+    }
+    response = requests.post(endpoint, params=payload)
+    try:
+        result = response.json()
+        if response.status_code == 200:
+            print("Faculty successfully added.")
+        else:
+            print(f"Error adding faculty: {response.status_code}")
+            print(f"Response details: {result}")
+    except ValueError:
+        print(f"Error parsing response. HTTP status: {response.status_code}")
+        print(f"Response text: {response.text}")
+
+if name == "main":
+    fake_gen = Faker()
+
+    for _ in range(1):
+        create_faculty(
+            faculty_name=fake_gen.job(),
+            dean_name=fake_gen.name(),
+            faculty_capacity=randint(100, 1000)
+        )
