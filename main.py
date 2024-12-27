@@ -108,3 +108,44 @@ async def delete_study(student_id_: int):
         session_.delete(obj)
         session_.commit()
         return f"Study deleted: {obj.student_id}."
+
+
+#CREATE FACULTY TABLE 
+
+@app.post("/add_faculty", tags=["faculty"])
+async def add_faculty(name_: str, decan_: str, capacity_: int):
+    obj = models_.Faculty(name = name_, decan = decan_, capacity = capacity_)
+    session_.add(obj)
+    session_.commit()
+    return f"Faculty Added: {obj.name} - {obj.decan}"
+
+@app.get("/get_faculty/{faculty_id}", tags=["faculty"])
+async def get_faculty(faculty_id: int):
+    faculty = session_.query(models_.Faculty).filter(models_.Faculty.faculty_id == faculty_id).first()
+    if faculty is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to get faculty by ID: Faculty not found.")
+    return faculty
+
+@app.put("/update_faculty/{faculty_id}", tags=["faculty"])
+async def update_study(faculty_id_: int, new_name_: str, new_decan : str, new_capacity: int):
+    if (obj := session_.query(models_.Faculty).filter(models_.Faculty.faculty_id == faculty_id_).first()) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to update faculty")
+    if new_name_:
+        obj.name = new_name_
+    if new_decan:
+        obj.decan = new_decan
+    if new_capacity:
+        obj.capacity = new_capacity
+    session_.add(obj)
+    session_.commit()
+    return f"Successfully updated faculty with ID:{obj.faculty_id}."
+
+
+@app.delete("/delete_faculty/{faculty_id}", tags=["faculty"])
+async def delete_faculty(faculty_id_: int):
+    if (obj := session_.query(models_.Faculty).filter(models_.Faculty.faculty_id == faculty_id_).first()) is not None:
+        session_.delete(obj)
+        session_.commit()
+        return f"Faculty deleted: {obj.faculty_id}."
