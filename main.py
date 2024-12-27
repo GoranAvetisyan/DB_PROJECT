@@ -22,3 +22,10 @@ async def add_student(full_name: str, grade_point_average: float, student_age: i
     return f"Student Added: {student_obj.id} - {student_obj.Name_Surname}."
 
 
+@app.get("/get_student/{student_id}", tags=["student"])
+async def get_student(student_id: int):
+    student = session_.query(models_.Student).filter(models_.Student.id == student_id).first()
+    if student is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Failed to get student by ID: Student not found.")
+    return student
