@@ -1,0 +1,18 @@
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, Date, Float
+from sqlalchemy.orm import declarative_base
+import subprocess
+import sessions
+
+Base = declarative_base()
+
+#create class Student
+
+class Student(Base):
+    __tablename__ = "Students"
+
+    id = Column(Integer, primary_key=True, nullable=False, index=True)
+    Name_Surname = Column(String(150), nullable=False) 
+    gpa = Column(Float, nullable=False)
+    age = Column(Integer, nullable=False)
+    entry_year = Column(Integer, nullable=False)
+    gender = Column(String(15), nullable=False)
