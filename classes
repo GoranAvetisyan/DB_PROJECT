@@ -16,3 +16,13 @@ class Student(Base):
     age = Column(Integer, nullable=False)
     entry_year = Column(Integer, nullable=False)
     gender = Column(String(15), nullable=False)
+
+#create class faculty
+
+class Faculty(Base):
+    __tablename__ = "Faculty"
+    
+    faculty_id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String(50), nullable=False)
+    decan = Column(String(20), nullable=True)
+    capacity = Column(Integer, nullable=True)
