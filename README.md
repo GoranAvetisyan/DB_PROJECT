@@ -8,8 +8,8 @@ This repository hosts a FastAPI application integrated with SQLAlchemy to manage
 Installation
 
 Clone the repository:
-git clone https://github.com/your_username/bd_project.git
-cd bd_project
+git clone https://github.com/your_username/db_project.git
+cd db_project
 
 Install dependencies:
 pip install -r requirements.txt
